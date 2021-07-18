@@ -1,0 +1,498 @@
+{
+  "nodes": [
+    {
+      "name": "udp_send",
+      "type": "class",
+      "cfg": {
+        "class": "udp_send",
+        "prj": "bus"
+      },
+      "pos": {
+        "x": 2394,
+        "y": 366
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {
+        "pwm2": {
+          "node": "add_drive",
+          "pin": "out"
+        },
+        "pwm3": {
+          "node": "controller",
+          "pin": "pwm_left"
+        },
+        "pwm4": {
+          "node": "controller",
+          "pin": "pwm_right"
+        }
+      }
+    },
+    {
+      "name": "udp_rcv",
+      "type": "class",
+      "cfg": {
+        "class": "udp_rcv",
+        "prj": "bus"
+      },
+      "pos": {
+        "x": 198,
+        "y": 20
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {}
+    },
+    {
+      "name": "blur_p",
+      "type": "base",
+      "cfg": {
+        "node": "parameter",
+        "data_type": "double",
+        "default": 0
+      },
+      "pos": {
+        "x": 198,
+        "y": -89
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {}
+    },
+    {
+      "name": "t1",
+      "type": "base",
+      "cfg": {
+        "node": "parameter",
+        "data_type": "double",
+        "default": 0
+      },
+      "pos": {
+        "x": 194,
+        "y": 117
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {}
+    },
+    {
+      "name": "t2",
+      "type": "base",
+      "cfg": {
+        "node": "parameter",
+        "data_type": "double",
+        "default": 0
+      },
+      "pos": {
+        "x": 192,
+        "y": 235
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {}
+    },
+    {
+      "name": "man_input",
+      "type": "base",
+      "cfg": {
+        "node": "parameter",
+        "data_type": "abmt::man_ctrl_state",
+        "default": ""
+      },
+      "pos": {
+        "x": 1051,
+        "y": 267
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {}
+    },
+    {
+      "name": "manual_drive",
+      "type": "class",
+      "cfg": {
+        "class": "manual_drive",
+        "prj": "bus"
+      },
+      "pos": {
+        "x": 1616,
+        "y": 275
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {
+        "in": {
+          "node": "man_input",
+          "pin": "param"
+        }
+      }
+    },
+    {
+      "name": "calc_delta",
+      "type": "class",
+      "cfg": {
+        "class": "calc_delta",
+        "prj": "bus"
+      },
+      "pos": {
+        "x": 1049,
+        "y": 477
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {
+        "image": {
+          "node": "udp_rcv",
+          "pin": "img"
+        },
+        "lane_with": {
+          "node": "lane_width",
+          "pin": "param"
+        },
+        "lines": {
+          "node": "cv",
+          "pin": "out"
+        },
+        "target_height": {
+          "node": "target_height",
+          "pin": "param"
+        }
+      }
+    },
+    {
+      "name": "target_height",
+      "type": "base",
+      "cfg": {
+        "node": "parameter",
+        "data_type": "double",
+        "default": 0
+      },
+      "pos": {
+        "x": 174,
+        "y": 740
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {}
+    },
+    {
+      "name": "lane_width",
+      "type": "base",
+      "cfg": {
+        "node": "parameter",
+        "data_type": "double",
+        "default": 0
+      },
+      "pos": {
+        "x": 175,
+        "y": 625
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {}
+    },
+    {
+      "name": "controller",
+      "type": "class",
+      "cfg": {
+        "class": "controller",
+        "prj": "bus"
+      },
+      "pos": {
+        "x": 1643,
+        "y": 614
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {
+        "delta": {
+          "node": "rt_2",
+          "pin": "out"
+        },
+        "lane_ok": {
+          "node": "rt_1",
+          "pin": "out"
+        },
+        "p": {
+          "node": "p",
+          "pin": "param"
+        }
+      }
+    },
+    {
+      "name": "p",
+      "type": "base",
+      "cfg": {
+        "node": "parameter",
+        "data_type": "double",
+        "default": 0
+      },
+      "pos": {
+        "x": 175,
+        "y": 852
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {}
+    },
+    {
+      "name": "add_drive",
+      "type": "expression",
+      "cfg": {
+        "function": "a+b",
+        "output_name": "out",
+        "output_type": "double"
+      },
+      "pos": {
+        "x": 2022,
+        "y": 369
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {
+        "a": {
+          "node": "manual_drive",
+          "pin": "up"
+        },
+        "b": {
+          "node": "controller",
+          "pin": "pwm_drive"
+        }
+      }
+    },
+    {
+      "name": "rt_2",
+      "type": "base",
+      "cfg": {
+        "node": "rt",
+        "data_type": "double",
+        "default": "0"
+      },
+      "pos": {
+        "x": 1368,
+        "y": 465
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {
+        "in": {
+          "node": "calc_delta",
+          "pin": "delta_norm"
+        }
+      }
+    },
+    {
+      "name": "rt_1",
+      "type": "base",
+      "cfg": {
+        "node": "rt",
+        "data_type": "double",
+        "default": "0"
+      },
+      "pos": {
+        "x": 1370,
+        "y": 592
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {
+        "in": {
+          "node": "calc_delta",
+          "pin": "lane_ok"
+        }
+      }
+    },
+    {
+      "name": "cv",
+      "type": "base",
+      "cfg": {
+        "node": "subsystem",
+        "nodes": [
+          {
+            "name": "blur_size",
+            "type": "base",
+            "cfg": {
+              "node": "input",
+              "name": "blur_size"
+            },
+            "pos": {
+              "x": 0,
+              "y": 3
+            },
+            "rotate": false,
+            "comment_out": false,
+            "inputs": {}
+          },
+          {
+            "name": "threshold1",
+            "type": "base",
+            "cfg": {
+              "node": "input",
+              "name": "threshold1"
+            },
+            "pos": {
+              "x": 0,
+              "y": 295
+            },
+            "rotate": false,
+            "comment_out": false,
+            "inputs": {}
+          },
+          {
+            "name": "threshold2",
+            "type": "base",
+            "cfg": {
+              "node": "input",
+              "name": "threshold2"
+            },
+            "pos": {
+              "x": 0,
+              "y": 415
+            },
+            "rotate": false,
+            "comment_out": false,
+            "inputs": {}
+          },
+          {
+            "name": "img",
+            "type": "base",
+            "cfg": {
+              "node": "input",
+              "name": "img"
+            },
+            "pos": {
+              "x": 2,
+              "y": 125
+            },
+            "rotate": false,
+            "comment_out": false,
+            "inputs": {}
+          },
+          {
+            "name": "blur",
+            "type": "class",
+            "cfg": {
+              "class": "blur",
+              "prj": "bus"
+            },
+            "pos": {
+              "x": 432,
+              "y": 16
+            },
+            "rotate": false,
+            "comment_out": false,
+            "inputs": {
+              "blur_size": {
+                "node": "blur_size",
+                "pin": "out"
+              },
+              "img": {
+                "node": "img",
+                "pin": "out"
+              }
+            }
+          },
+          {
+            "name": "canny",
+            "type": "class",
+            "cfg": {
+              "class": "canny",
+              "prj": "bus"
+            },
+            "pos": {
+              "x": 748,
+              "y": 37
+            },
+            "rotate": false,
+            "comment_out": false,
+            "inputs": {
+              "img": {
+                "node": "blur",
+                "pin": "out"
+              },
+              "threshold1": {
+                "node": "threshold1",
+                "pin": "out"
+              },
+              "threshold2": {
+                "node": "threshold2",
+                "pin": "out"
+              }
+            }
+          },
+          {
+            "name": "hough_lines",
+            "type": "class",
+            "cfg": {
+              "class": "hough_lines",
+              "prj": "bus"
+            },
+            "pos": {
+              "x": 1076,
+              "y": 64
+            },
+            "rotate": false,
+            "comment_out": false,
+            "inputs": {
+              "in": {
+                "node": "canny",
+                "pin": "out"
+              }
+            }
+          },
+          {
+            "name": "out",
+            "type": "base",
+            "cfg": {
+              "node": "output",
+              "name": "out"
+            },
+            "pos": {
+              "x": 1496,
+              "y": 131
+            },
+            "rotate": false,
+            "comment_out": false,
+            "inputs": {
+              "in": {
+                "node": "hough_lines",
+                "pin": "out"
+              }
+            }
+          }
+        ],
+        "view": {
+          "scale": 0.5,
+          "trans": {
+            "x": 25,
+            "y": 35
+          }
+        }
+      },
+      "pos": {
+        "x": 750,
+        "y": 61
+      },
+      "rotate": false,
+      "comment_out": false,
+      "inputs": {
+        "blur_size": {
+          "node": "blur_p",
+          "pin": "param"
+        },
+        "img": {
+          "node": "udp_rcv",
+          "pin": "img"
+        },
+        "threshold1": {
+          "node": "t1",
+          "pin": "param"
+        },
+        "threshold2": {
+          "node": "t2",
+          "pin": "param"
+        }
+      }
+    }
+  ]
+}
